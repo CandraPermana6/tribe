@@ -27,9 +27,5 @@ class Perhitungan extends Model
         return $this->nilai * $bobot / 100;
     }
 
-    public function getNilaiAkhirAttribute()
-    {
-        $totalNilaiUtility = $this->where('tribe_id', $this->tribe_id)->sum('nilai_utility');
-        return $totalNilaiUtility;
-    }
+    
 }

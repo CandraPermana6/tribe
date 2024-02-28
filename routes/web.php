@@ -19,7 +19,7 @@ use App\Http\Controllers\TribeController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::resource('kriteria', KriteriaController::class);
@@ -30,5 +30,10 @@ Route::resource('tribe', TribeController::class);
 
 
 Auth::routes();
+Route::post('/perhitungan/simpan', [PerhitunganController::class, 'simpan'])->name('perhitungan.simpan');
+Route::get('/riwayat-perhitungan', [PerhitunganController::class, 'riwayat'])->name('perhitungan.riwayat');
+Route::get('/perangkingan', [PerhitunganController::class, 'rangking'])->name('perhitungan.rangking');
+Route::get('/perhitungan/perangkingan/detail', [PerhitunganController::class, 'detailPerangkingan'])->name('perhitungan.perangkingan.detail');
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

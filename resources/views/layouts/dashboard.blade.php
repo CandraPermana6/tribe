@@ -71,17 +71,17 @@
                 </a>
             </li>
         
-            <!-- Nav Item - Perhitungan -->
+            {{-- <!-- Nav Item - Perhitungan -->
             <li class="nav-item {{ Request::is('perhitungan*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('perhitungan.index') }}">
                     <i class="fas fa-calculator"></i>
                     <span>Perhitungan</span>
                 </a>
-            </li>
+            </li> --}}
         
             <!-- Nav Item - Riwayat -->
-            <li class="nav-item {{ Request::is('riwayat*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('riwayat.index') }}">
+            <li class="nav-item {{ Request::is('riwayat-peritungan') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('perhitungan.riwayat') }}">
                     <i class="fas fa-history"></i>
                     <span>Riwayat</span>
                 </a>

@@ -40,4 +40,6 @@ class PenilaianController extends Controller
 
         return redirect()->route('penilaian.index')->with('success', 'Penilaian berhasil ditambahkan.');
     }
+
+        
 }

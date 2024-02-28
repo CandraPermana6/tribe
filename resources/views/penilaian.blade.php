@@ -3,26 +3,44 @@
 @section('content')
     <h1>Daftar Penilaian</h1>
 
+    <div class="col-md-2">
+        <a href="{{ route('perhitungan.index') }}"  class="btn btn-primary mb-3">Hitung Nilai Awal</a>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Tribe</th>
+                @foreach ($kriterias as $kriteria)
+                <th  class="form-label">{{ $kriteria->nama }}</th>
+        @endforeach
                 <th scope="col">Action</th>
+                
             </tr>
         </thead>
         <tbody>
             @foreach ($tribes as $tribe)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $tribe->nama }}</td>
-                    <td>
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#givePenilaianModal{{ $tribe->id }}">
-                            Beri Nilai
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $tribe->nama }}</td>
+                @foreach ($kriterias as $kriteria)
+                    @php
+                        // Ambil penilaian berdasarkan tribe dan kriteria
+                        $penilaian = $tribe->penilaians->where('kriteria_id', $kriteria->id)->first();
+                        // Cek apakah penilaian sudah ada
+                        $nilai = $penilaian ? $penilaian->nilai : '-';
+                    @endphp
+                    <td>{{ $nilai }}</td>
+                @endforeach
+                <td>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#givePenilaianModal{{ $tribe->id }}">
+                        Beri Nilai
+                    </button>
+                </td>
+            </tr>
+        @endforeach
+        
         </tbody>
     </table>
 
@@ -42,7 +60,16 @@
                             @foreach ($kriterias as $kriteria)
                                 <div class="mb-3">
                                     <label for="nilai_{{ $kriteria->id }}" class="form-label">{{ $kriteria->nama }}</label>
+                                    @if ($kriteria->nama == 'Pengalaman')
+                                    <select class="form-control mb-2" id="nilai_{{ $kriteria->id }}" name="nilai_{{ $kriteria->id }}">
+                                        <option value="" @readonly(true)>-- Pilih jenis pengalaman --</option>
+                                        <option value="Project">Project</option>
+                                        <option value="Pelatihan">Pelatihan</option>
+                                        <option value="Organisasi">Organisasi</option>
+                                    </select>
+                                    @endif
                                     <input type="text" class="form-control" id="nilai_{{ $kriteria->id }}" name="nilai_{{ $kriteria->id }}">
+                                    
                                 </div>
                             @endforeach
                             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -52,5 +79,6 @@
             </div>
         </div>
     @endforeach
+
 
 @endsection

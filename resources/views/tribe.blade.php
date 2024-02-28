@@ -95,8 +95,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                            <input type="text" class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                            <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                                <option value="laki-laki">Laki-laki</option>
+                                <option value="perempuan">Perempuan</option>
+                            </select>
                         </div>
+                        
                         <div class="mb-3">
                             <label for="universitas" class="form-label">Universitas</label>
                             <input type="text" class="form-control" id="universitas" name="universitas">
