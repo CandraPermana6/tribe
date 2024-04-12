@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Perhitungan extends Model
 {
@@ -27,5 +28,8 @@ class Perhitungan extends Model
         return $this->nilai * $bobot / 100;
     }
 
-    
+    public function getTanggalPerhitunganIndoAttribute()
+    {
+        return Carbon::parse($this->tanggal_perhitungan)->translatedFormat('l, d F Y ');
+    }
 }

@@ -1,21 +1,20 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <h1>Daftar Penilaian</h1>
+    <h1 class="fw-bold text-center my-5">Daftar Penilaian</h1>
 
-    <div class="col-md-2">
-        <a href="{{ route('perhitungan.index') }}"  class="btn btn-primary mb-3">Hitung Nilai Awal</a>
-    </div>
+   <div class="card p-3 m-3 shadow">
+   
 
-    <table class="table">
+    <table class="table table-borderless" id="tableData">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tribe</th>
+                <th >No</th>
+                <th > Nama Tribe</th>
                 @foreach ($kriterias as $kriteria)
                 <th  class="form-label">{{ $kriteria->nama }}</th>
         @endforeach
-                <th scope="col">Action</th>
+                <th >Action</th>
                 
             </tr>
         </thead>
@@ -26,16 +25,16 @@
                 <td>{{ $tribe->nama }}</td>
                 @foreach ($kriterias as $kriteria)
                     @php
-                        // Ambil penilaian berdasarkan tribe dan kriteria
                         $penilaian = $tribe->penilaians->where('kriteria_id', $kriteria->id)->first();
-                        // Cek apakah penilaian sudah ada
                         $nilai = $penilaian ? $penilaian->nilai : '-';
+                        $teksTombol = $nilai != null ? 'Ubah Nilai' : 'Beri Nilai';
                     @endphp
+
                     <td>{{ $nilai }}</td>
                 @endforeach
                 <td>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#givePenilaianModal{{ $tribe->id }}">
-                        Beri Nilai
+                    <button type="button" class="btn btn-{{ $nilai != null ? 'primary' : 'success' }}" data-bs-toggle="modal" data-bs-target="#givePenilaianModal{{ $tribe->id }}">
+                        {{ $teksTombol }}
                     </button>
                 </td>
             </tr>
@@ -43,6 +42,11 @@
         
         </tbody>
     </table>
+
+    <div class="col-md-2">
+        <a href="{{ route('perhitungan.index') }}"  class="btn btn-primary mb-3">Hitung Nilai Awal</a>
+    </div>
+   </div>
 
     <!-- Modal Give Penilaian -->
     @foreach ($tribes as $tribe)

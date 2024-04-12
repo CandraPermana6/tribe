@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Tribe;
+use App\Models\Kriteria;
+use App\Models\RiwayatPenilaian;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $jumlahTribe = Tribe::count();
+
+        $jumlahKriteria = Kriteria::count();
+
+
+        // Mengirimkan data ke tampilan 'home.blade.php'
+        return view('home', [
+            'jumlahTribe' => $jumlahTribe,
+            'jumlahKriteria' => $jumlahKriteria,
+        ]);
     }
 }

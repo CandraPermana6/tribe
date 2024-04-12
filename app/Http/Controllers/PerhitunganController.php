@@ -9,53 +9,36 @@ use App\Models\Kriteria;
 use App\Models\Perhitungan;
 use Illuminate\Support\Facades\Redirect;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class PerhitunganController extends Controller
 {
     
     public function index()
     {
-        // Ambil semua tribes
         $tribes = Tribe::all();
-    
-        // Ambil semua kriteria
         $kriterias = Kriteria::all();
-    
-        // Inisialisasi array untuk menyimpan nilai awal dan nilai akhir per kriteria
         $nilaiPerKriteria = [];
-    
-        // Inisialisasi array untuk menyimpan total nilai akhir per tribe
         $totalNilaiAkhirPerTribe = [];
     
-        // Looping setiap tribe
         foreach ($tribes as $tribe) {
-            // Inisialisasi nilai awal per tribe
             $nilaiAwalPerTribe = [];
-    
-            // Inisialisasi total nilai akhir per tribe
             $totalNilaiAkhir = 0;
     
-            // Looping setiap kriteria
             foreach ($kriterias as $kriteria) {
-                // Ambil penilaian berdasarkan tribe dan kriteria
                 $penilaian = Penilaian::where('tribe_id', $tribe->id)
                     ->where('kriteria_id', $kriteria->id)
                     ->first();
     
-                // Hitung nilai awal per kriteria
                 $nilaiAwal = $penilaian ? $penilaian->nilai : 'Belum dinilai';
-    
-                // Hitung nilai akhir per kriteria (nilai awal dikali bobot)
                 $nilaiAkhir = $nilaiAwal * $kriteria->bobot;
-    
-                // Tambahkan nilai akhir ke total nilai akhir per tribe
                 $totalNilaiAkhir += $nilaiAkhir;
     
-                // Simpan nilai awal dan nilai akhir per kriteria ke dalam array
                 $nilaiAwalPerTribe[$kriteria->id] = $nilaiAwal;
                 $nilaiPerKriteria[$tribe->id][$kriteria->id] = $nilaiAkhir;
             }
     
-            // Simpan nilai awal per tribe ke dalam array
             $nilaiPerKriteria[$tribe->id]['nilai_awal'] = $nilaiAwalPerTribe;
     
             // Simpan total nilai akhir per tribe ke dalam array
@@ -112,14 +95,8 @@ class PerhitunganController extends Controller
 
         // Ambil perhitungan yang sesuai dengan ID yang diberikan
         $perhitungan = Perhitungan::findOrFail($perhitunganId);
-
-        // Ambil tanggal perhitungan yang sesuai
         $tanggalPerhitungan = $perhitungan->tanggal_perhitungan;
-
-        // Ambil semua data perhitungan dengan tanggal yang sama
         $perhitunganSamaTanggal = Perhitungan::where('tanggal_perhitungan', $tanggalPerhitungan)->get();
-
-        // Urutkan perhitungan berdasarkan nilai akhir dari terbesar ke terkecil
         $perhitunganSamaTanggal = $perhitunganSamaTanggal->sortByDesc('nilai_akhir');
 
         // Ambil nama tribe berdasarkan ID tribe pada perhitungan
@@ -175,6 +152,37 @@ class PerhitunganController extends Controller
 
     // Tampilkan view dengan data perhitungan yang sudah diurutkan
     return view('perangkingan', ['perhitunganSamaJam' => $perhitunganSamaJam]);
+}
+
+
+    public function riwayatPdf($id){
+        $perhitungan = Perhitungan::findOrFail($id);
+        $tanggalPerhitungan = $perhitungan->tanggal_perhitungan;
+        $perhitunganSamaTanggal = Perhitungan::where('tanggal_perhitungan', $tanggalPerhitungan)->get();
+        $perhitunganSamaTanggal = $perhitunganSamaTanggal->sortByDesc('nilai_akhir');
+
+        foreach ($perhitunganSamaTanggal as $perhitungan) {
+            $tribe = Tribe::findOrFail($perhitungan->tribe_id);
+            $perhitungan->tribe_nama = $tribe->nama;
+        }
+
+        return $perhitunganSamaTanggal;
+        
+    }
+public function cetakPDF($id)
+{
+    $perhitunganSamaTanggal = $this->riwayatPdf($id);
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isRemoteEnabled', true);
+    $dompdf = new Dompdf($options);
+
+    $html = view('perhitungan_pdf', compact('perhitunganSamaTanggal'))->render();
+
+    $dompdf->loadHtml($html);
+
+    $dompdf->render();
+    return $dompdf->stream('riwayat_perhitungan.pdf');
 }
 
 

@@ -1,40 +1,44 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <h1>Riwayat Perhitungan</h1>
+    <h1 class="fw-bold text-center my-5">Riwayat Perhitungan</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Perhitungan</th>
-                <th scope="col">Tanggal Perhitungan</th>
-                <th scope="col">Detail</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $iteration = 0;
-            @endphp
+    <div class="card p-3 m-3 shadow">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Perhitungan</th>
+                    <th scope="col">Tanggal Perhitungan</th>
+                    <th scope="col">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $iteration = 0;
+                @endphp
+    
+                @foreach ($riwayatPerhitungan as $perhitungan)
+                    @if ($loop->iteration == 1 || $perhitungan->tanggal_perhitungan != $riwayatPerhitungan[$loop->index - 1]->tanggal_perhitungan)
+                        <tr>
+                            <td>Perhitungan ke-{{ ++$iteration }}</td>
+                            <td>{{ $perhitungan->tanggal_perhitungan_indo }}</td>
 
-            @foreach ($riwayatPerhitungan as $perhitungan)
-                @if ($loop->iteration == 1 || $perhitungan->tanggal_perhitungan != $riwayatPerhitungan[$loop->index - 1]->tanggal_perhitungan)
-                    <tr>
-                        <td>Perhitungan ke-{{ ++$iteration }}</td>
-                        <td>{{ $perhitungan->tanggal_perhitungan }}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="showDetail({{ $perhitungan->id }})">Detail</button>
-                        </td>
-                    </tr>
-                @endif
-            @endforeach
-        </tbody>
-    </table>
+                            <td>
+                                <button class="btn btn-primary" onclick="showDetail({{ $perhitungan->id }})">Detail</button>
+                                <a href="{{ route('cetak-pdf', $perhitungan->id) }}" class="btn btn-success" target="_blank">Cetak PDF</a>
+                            </td>
+                        </tr>
+                    @endif
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     <!-- Detail Modal -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" id="detailModalContent">
-                <!-- Detail perangkingan akan dimuat di sini -->
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content " id="detailModalContent">
+                {{-- Isi --}}
             </div>
         </div>
     </div>
