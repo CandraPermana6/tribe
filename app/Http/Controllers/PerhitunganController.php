@@ -182,7 +182,7 @@ public function cetakPDF($id)
     $dompdf->loadHtml($html);
 
     $dompdf->render();
-    return $dompdf->stream('riwayat_perhitungan.pdf');
+    return $dompdf->stream('hasil.pdf');
 }
 
 

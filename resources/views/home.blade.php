@@ -1,43 +1,31 @@
 @extends('layouts.dashboard')
-
 @section('content')
-<div class="container my-5">
-    {{-- <div class="card p-3">
-        <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-4">
-                <div class="card text-white bg-success o-hidden h-100">
-                    <div class="card-body">
-                        <div class="card-body-icon">
-                            <i class="fas fa-fw fa-users"></i>
-                        </div>
-                        <div class="mr-5">{{ $jumlahTribe }} Tribes</div>
+<div class="card-shadow  py-5">
+    <br/>
+    <h3 class="text-center font-weight-bold">Selamat Datang di Sistem Pendukung Keputusan Pemilihan Tribe</h3>
+    <br/>
+    </div>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">                       
+                <!-- Illustrations -->
+                <div class="card shadow mb-6">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Selamat Datang {{ Auth::user()->name }}</h6>
                     </div>
-                    <a class="card-footer text-white clearfix small z-1" href="#">
-                        <span class="float-left">View Details</span>
-                        <span class="float-right">
-                            <i class="fas fa-angle-right"></i>
-                        </span>
-                    </a>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-4">
-                <div class="card text-white bg-primary o-hidden h-100">
                     <div class="card-body">
-                        <div class="card-body-icon">
-                            <i class="fas fa-fw fa-list"></i>
+                        <div class="text-center">
+                            <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
+                                src="{{ asset('assets') }}/img/undraw_posting_photo.svg" alt="">
                         </div>
-                        <div class="mr-5">{{ $jumlahKriteria }} Kriteria</div>
+                        <p>Sistem ini bertujuan untuk melakukan pemilihan Tribe Kampus Merdeka pada PT Chakra Giri Energi Indonesia Menggunakan Metode SMART, Adapun fitur pada sistem ini adalah :</p>
+                        <h6>- Fitur Data Alternatif</h6>
+                        <h6>- Fitur Data Kriteria</h6>
+                        <h6>- Fitur Data Penilaian</h6>
+                        <h6>- Fitur Proses Perhitungan</h6>
+                        <h6>- Fitur Nilai Akhir</h6>
                     </div>
-                    <a class="card-footer text-white clearfix small z-1" href="#">
-                        <span class="float-left">View Details</span>
-                        <span class="float-right">
-                            <i class="fas fa-angle-right"></i>
-                        </span>
-                    </a>
                 </div>
-            </div>
-        </div>
-        
-    </div> --}}
-</div>
+
+    </div>
+    <!-- /.container-fluid -->
 @endsection

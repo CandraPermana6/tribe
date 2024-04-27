@@ -27,13 +27,13 @@
                     @php
                         $penilaian = $tribe->penilaians->where('kriteria_id', $kriteria->id)->first();
                         $nilai = $penilaian ? $penilaian->nilai : '-';
-                        $teksTombol = $nilai != null ? 'Ubah Nilai' : 'Beri Nilai';
+                        $teksTombol = $penilaian ? 'Ubah Nilai' : 'Beri Nilai';
                     @endphp
 
                     <td>{{ $nilai }}</td>
                 @endforeach
                 <td>
-                    <button type="button" class="btn btn-{{ $nilai != null ? 'primary' : 'success' }}" data-bs-toggle="modal" data-bs-target="#givePenilaianModal{{ $tribe->id }}">
+                    <button type="button" class="btn btn-{{ $penilaian ? 'primary' : 'success' }}" data-bs-toggle="modal" data-bs-target="#givePenilaianModal{{ $tribe->id }}">
                         {{ $teksTombol }}
                     </button>
                 </td>
@@ -64,14 +64,7 @@
                             @foreach ($kriterias as $kriteria)
                                 <div class="mb-3">
                                     <label for="nilai_{{ $kriteria->id }}" class="form-label">{{ $kriteria->nama }}</label>
-                                    @if ($kriteria->nama == 'Pengalaman')
-                                    <select class="form-control mb-2" id="nilai_{{ $kriteria->id }}" name="nilai_{{ $kriteria->id }}">
-                                        <option value="" @readonly(true)>-- Pilih jenis pengalaman --</option>
-                                        <option value="Project">Project</option>
-                                        <option value="Pelatihan">Pelatihan</option>
-                                        <option value="Organisasi">Organisasi</option>
-                                    </select>
-                                    @endif
+                                    
                                     <input type="text" class="form-control" id="nilai_{{ $kriteria->id }}" name="nilai_{{ $kriteria->id }}">
                                     
                                 </div>

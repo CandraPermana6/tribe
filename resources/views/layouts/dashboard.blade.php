@@ -24,6 +24,7 @@
     
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    
 </head>
 
 <body id="page-top">
@@ -181,6 +182,8 @@
     <!-- Page level custom scripts -->
     <script src="{{asset('../assets/js')}}/demo/chart-area-demo.{{asset('../assets/js')}}"></script>
     <script src="{{asset('../assets/js')}}/demo/chart-pie-demo.{{asset('../assets/js')}}"></script>
+    
+    @yield('scripts')
 
 </body>
 
