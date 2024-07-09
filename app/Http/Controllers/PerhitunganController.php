@@ -7,6 +7,7 @@ use App\Models\Penilaian;
 use App\Models\Tribe;
 use App\Models\Kriteria;
 use App\Models\Perhitungan;
+use App\Models\SubKriteria;
 use Illuminate\Support\Facades\Redirect;
 
 use Dompdf\Dompdf;
@@ -22,21 +23,67 @@ class PerhitunganController extends Controller
         $nilaiPerKriteria = [];
         $totalNilaiAkhirPerTribe = [];
     
+        // Ambil kriteria dengan nama 'Pengalaman'
+        $kriteriaPengalaman = Kriteria::where('nama', 'Pengalaman')->first();
+        if ($kriteriaPengalaman) {
+            // Ambil semua sub kriteria dari kriteria 'Pengalaman'
+            $subKriterias = SubKriteria::where('kriteria_id', $kriteriaPengalaman->id)->get();
+        }
+    
         foreach ($tribes as $tribe) {
             $nilaiAwalPerTribe = [];
             $totalNilaiAkhir = 0;
+            $totalNilaiPengalaman = 0;
+            $nilaiAwalPengalaman = 0;
     
             foreach ($kriterias as $kriteria) {
-                $penilaian = Penilaian::where('tribe_id', $tribe->id)
-                    ->where('kriteria_id', $kriteria->id)
-                    ->first();
+                if ($kriteria->nama === 'Pengalaman' && isset($subKriterias)) {
+                    $totalNilaiSubKriteria = 0;
+                    $jumlahSubKriteria = 0;
+                    
+                    foreach ($subKriterias as $subKriteria) {
+                        $penilaian = Penilaian::where('tribe_id', $tribe->id)
+                            ->where('sub_kriteria_id', $subKriteria->id)
+                            ->first();
     
-                $nilaiAwal = $penilaian ? $penilaian->nilai : 'Belum dinilai';
-                $nilaiAkhir = $nilaiAwal * $kriteria->bobot;
-                $totalNilaiAkhir += $nilaiAkhir;
+                        $nilaiAwal = $penilaian ? $penilaian->nilai : 0;
+                        switch (strtolower($subKriteria->nama)) {
+                            case 'project':
+                                $nilaiAkhir = $nilaiAwal * 0.2;
+                                break;
+                            case 'pelatihan':
+                                $nilaiAkhir = $nilaiAwal * 0.1;
+                                break;
+                            case 'organisasi':
+                                $nilaiAkhir = $nilaiAwal * 0.05;
+                                break;
+                            default:
+                                $nilaiAkhir = 0;
+                                break;
+                        }
+                        $totalNilaiSubKriteria += $nilaiAwal; // Tambahkan nilai awal sub kriteria
+                        $totalNilaiPengalaman += $nilaiAkhir;
+                        $jumlahSubKriteria++;
+                    }
+                    
+                    $nilaiAwalPengalaman = $jumlahSubKriteria > 0 ? $totalNilaiSubKriteria / $jumlahSubKriteria : 0; // Rata-rata nilai awal sub kriteria
+                    
+                    
+                    $nilaiAwalPerTribe[$kriteria->id] = $nilaiAwalPengalaman; // Simpan nilai awal pengalaman
+                    $nilaiPerKriteria[$tribe->id][$kriteria->id] = $totalNilaiPengalaman;
+                    $totalNilaiAkhir += $totalNilaiPengalaman;
+                } else {
+                    $penilaian = Penilaian::where('tribe_id', $tribe->id)
+                        ->where('kriteria_id', $kriteria->id)
+                        ->first();
     
-                $nilaiAwalPerTribe[$kriteria->id] = $nilaiAwal;
-                $nilaiPerKriteria[$tribe->id][$kriteria->id] = $nilaiAkhir;
+                    $nilaiAwal = $penilaian ? $penilaian->nilai : 'Belum dinilai';
+                    $nilaiAkhir = $nilaiAwal * $kriteria->bobot;
+                    $totalNilaiAkhir += $nilaiAkhir;
+    
+                    $nilaiAwalPerTribe[$kriteria->id] = $nilaiAwal;
+                    $nilaiPerKriteria[$tribe->id][$kriteria->id] = $nilaiAkhir;
+                }
             }
     
             $nilaiPerKriteria[$tribe->id]['nilai_awal'] = $nilaiAwalPerTribe;
@@ -47,6 +94,9 @@ class PerhitunganController extends Controller
     
         return view('perhitungan', compact('tribes', 'kriterias', 'nilaiPerKriteria', 'totalNilaiAkhirPerTribe'));
     }
+    
+
+    
     
 
     public function simpan(Request $request)

@@ -18,4 +18,9 @@ class Kriteria extends Model
     {
         $this->attributes['bobot'] = $value / 100;
     }
+
+    public function subKriterias()
+    {
+        return $this->hasMany(SubKriteria::class);
+    }
 }

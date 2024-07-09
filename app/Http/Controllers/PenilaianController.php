@@ -21,34 +21,48 @@ class PenilaianController extends Controller
 
     public function store(Request $request)
 {
-    // Validasi form data
-    $request->validate([
+    // Validasi input
+    $validatedData = $request->validate([
         'tribe_id' => 'required|exists:tribes,id',
-        'nilai_*' => 'required' // validasi semua nilai
+        // Tambahkan validasi untuk nilai-nilai kriteria/subkriteria di sini
     ]);
 
-    // Proses penilaian dan perbarui
+    // Proses penyimpanan penilaian
     foreach ($request->all() as $key => $value) {
-        if (strpos($key, 'nilai_') !== false) {
-            $kriteria_id = str_replace('nilai_', '', $key);
+        if (strpos($key, 'nilai_subkriteria') === 0) {
+            $subKriteriaId = substr($key, strlen('nilai_subkriteria'));
+            $nilai = $value;
 
-            try {
-                Penilaian::updateOrCreate([
-                    'tribe_id' => $request->input('tribe_id'),
-                    'kriteria_id' => $kriteria_id,
-                ], [
-                    'nilai' => $value,
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Error updating penilaian: ' . $e->getMessage());
-                // Handle error appropriately (e.g., flash message, redirect)
-            }
+            Penilaian::updateOrCreate(
+                [
+                    'tribe_id' => $request->tribe_id,
+                    'sub_kriteria_id' => $subKriteriaId
+                ],
+                [
+                    'nilai' => $nilai,
+                    'kriteria_id' => 1
+                ]
+            );
+        } elseif (strpos($key, 'nilai_') === 0) {
+            $kriteriaId = substr($key, strlen('nilai_'));
+            $nilai = $value;
+
+            Penilaian::updateOrCreate(
+                [
+                    'tribe_id' => $request->tribe_id,
+                    'kriteria_id' => $kriteriaId
+                ],
+                [
+                    'nilai' => $nilai
+                ]
+            );
         }
     }
 
-    // Redirect and display success message
-    return redirect()->route('penilaian.index')->with('success', 'Penilaian berhasil diperbarui.');
+    return redirect()->back()->with('success', 'Penilaian berhasil disimpan.');
 }
+
+    
 
     
 

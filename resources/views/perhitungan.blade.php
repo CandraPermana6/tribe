@@ -15,7 +15,6 @@
                 <tr>
                     <th scope="col">Nama Tribe</th>
                     <th scope="col">Kriteria</th>
-                    <th scope="col">Nilai Awal</th>
                     <th scope="col">Nilai Akhir</th>
                     <th scope="col">Total Nilai Akhir</th>
                 </tr>
@@ -29,7 +28,6 @@
                                 <td rowspan="{{ count($kriterias) }}">{{ $tribe->nama }}</td>
                             @endif
                             <td>{{ $kriteria->nama }}</td>
-                            <td>{{ $nilaiPerKriteria[$tribe->id]['nilai_awal'][$kriteria->id] }}</td>
                             <td>{{ $nilaiPerKriteria[$tribe->id][$kriteria->id] }}</td>
                         </tr>
                         @php
@@ -37,7 +35,7 @@
                         @endphp
                     @endforeach
                     <tr>
-                        <td colspan="3"></td>
+                        <td colspan="2"></td>
                         <td><strong>Total Nilai Akhir</strong></td>
                         <td class="fw-bold fs-5">{{ $totalNilaiAkhirTribe }}</td>
                     </tr>
