@@ -66,7 +66,7 @@ class PerhitunganController extends Controller
             $perhitunganBaru->save();
         }
 
-        return Redirect::route('perhitungan.riwayat')->with('success', 'Perhitungan berhasil disimpan.');
+        return Redirect::route('perhitungan.riwayat')->with('success', 'Berhasil disimpan.');
     } catch (\Exception $e) {
         return response()->json(['message' => 'Terjadi kesalahan saat menyimpan perhitungan.', 'error' => $e->getMessage()], 500);
     }

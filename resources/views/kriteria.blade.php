@@ -1,18 +1,27 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <h1 class="fw-bold text-center my-5">Daftar Kriteria</h1>
+    <h1 class="fw-bold text-center my-5">KRITERIA</h1>
 
     <div class="card p-3 m-3 shadow">
+        @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         <div class="col-md-3">
 
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addKriteriaModal">
-                Tambah Kriteria
+                + Tambah Kriteria
             </button>
         </div>
     
-        <table class="table table-hover table-borderless " id="tableData">
-            <thead>
+        <table class="table table-hover table-bordered">
+            <thead class="bg-primary text-white">
                 <tr>
                     <th >No</th>
                     <th >Nama</th>
@@ -25,7 +34,8 @@
                     <tr>
                         <th scope="row">{{ $loop->iteration }}</th>
                         <td>{{ $kriteria->nama }}</td>
-                        <td>{{ $kriteria->bobot }}</td>
+                        <td>{{ number_format($kriteria->bobot * 100) }}</td>
+
                         <td>
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editKriteriaModal{{ $kriteria->id }}">
                                 Edit
@@ -54,7 +64,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="edit_bobot" class="form-label">Bobot</label>
-                                            <input type="text" class="form-control" id="edit_bobot" name="bobot" value="{{ $kriteria->bobot }}">
+                                            <input type="text" class="form-control" id="edit_bobot" name="bobot" value="{{ number_format($kriteria->bobot * 100) }}">
                                         </div>
                                         <!-- Tambahkan input lain sesuai kebutuhan -->
                                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -64,8 +74,13 @@
                         </div>
                     </div>
                 @endforeach
+                <tr>
+                    <td colspan="2" class="text-end">Total Bobot saat ini</td>
+                    <td colspan="2">{{ $totalBobotSaatIni * 100 }}</td>
+                </tr>
             </tbody>
         </table>
+        <span class="text-danger text-small ">*Untuk memulai perhitungan , total Bobot harus 100</span>
     </div>
 
     <!-- Modal Add Kriteria -->

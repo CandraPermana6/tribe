@@ -2,20 +2,21 @@
 
 @section('content')
 <div class="container">
-    <h1 class="fw-bold text-center my-5">Perangkingan</h1>
+    <h1 class="fw-bold text-center my-5">HASIL</h1>
     <div class="card p-3 m-3 shadow">
         <div class="col-md-3">
 
-            <button id="simpanBtn" class="btn btn-primary mb-3">Simpan Perhitungan</button>
+            <button id="simpanBtn" class="btn btn-primary mb-3">Simpan Hasil</button>
         </div>
-    <table class="table">
-        <thead>
+    <table class="table table-hover table-bordered">
+        <thead class="bg-primary text-white">
             <tr>
                 <th scope="col">No</th>
                 <th scope="col">Tribe</th>
                 <th scope="col">Jenis Kelamin</th>
                 <th scope="col">Universitas</th>
                 <th scope="col">Total Nilai Akhir</th>
+                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,13 @@
                 <td>{{ $perhitungan['tribe']->jenis_kelamin }}</td>
                 <td>{{ $perhitungan['tribe']->universitas }}</td>
                 <td>{{ $perhitungan['total_nilai_akhir'] }}</td>
+                <td>
+                    @if ($index == 0 || $index == 1)
+                        <span class="badge bg-success">Terpilih</span>
+                    @else 
+                    <span class="badge bg-danger">Tidak Terpilih</span>
+                    @endif
+                </td>
             </tr>
             @endforeach
         </tbody>
@@ -52,7 +60,7 @@
                 perhitungan_sama_jam: perhitunganSamaJam
             },
             success: function(response) {
-                alert('Perhitungan berhasil disimpan.');
+                alert('Berhasil disimpan.');
                 window.location.href = '/riwayat-perhitungan';
             },
             error: function(xhr, textStatus, errorThrown) {

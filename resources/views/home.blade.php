@@ -18,11 +18,11 @@
                                 src="{{ asset('assets') }}/img/undraw_posting_photo.svg" alt="">
                         </div>
                         <p>Sistem ini bertujuan untuk melakukan pemilihan Tribe Kampus Merdeka pada PT Chakra Giri Energi Indonesia Menggunakan Metode SMART, Adapun fitur pada sistem ini adalah :</p>
-                        <h6>- Fitur Data Alternatif</h6>
+                        <h6>- Fitur Data Tribe</h6>
                         <h6>- Fitur Data Kriteria</h6>
                         <h6>- Fitur Data Penilaian</h6>
-                        <h6>- Fitur Proses Perhitungan</h6>
-                        <h6>- Fitur Nilai Akhir</h6>
+                        <h6>- Fitur Riwayat</h6>
+                        <h6>- Fitur Logout</h6>
                     </div>
                 </div>
 

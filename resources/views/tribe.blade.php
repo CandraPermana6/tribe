@@ -4,83 +4,87 @@
 
 <div class="container">
 
-    <h1 class="text-center fw-bold my-5">Daftar Tribe</h1>
+    <h1 class="text-center fw-bold my-5">DAFTAR TRIBE</h1>
 
     @if (session('success'))
         <div class="alert alert-success" role="alert">
             {{ session('success') }}
         </div>
     @endif
-    <div class="card p-3 m-3 shadow ">
-        <div class="col-md-3">
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addTribeModal">
-                Add Tribe
+    <div class="card p-3 m-3 shadow">
+        <div class="d-flex justify-content-between mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTribeModal">
+                + Tambah Tribe
             </button>
         </div>
-       <div class="table-responsive">
-        <table class="table table-borderless table-hover " id="tableData">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Jenis Kelamin</th>
-                    <th>Universitas</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($tribes as $tribe)
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="bg-primary text-white">
                     <tr>
-                        <th>{{ $loop->iteration }}</th>
-                        <td>{{ $tribe->nama }}</td>
-                        <td>{{ $tribe->jenis_kelamin }}</td>
-                        <td>{{ $tribe->universitas }}</td>
-                        <td>
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editTribeModal{{ $tribe->id }}">
-                                Edit
-                            </button>
-                            <form action="{{ route('tribe.destroy', $tribe->id) }}" method="POST" style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <th>Id</th>
+                        <th>Nama</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Universitas</th>
+                        <th>Action</th>
                     </tr>
-                   <!-- Modal Edit Tribe -->
-                   <div class="modal fade" id="editTribeModal{{ $tribe->id }}" tabindex="-1" aria-labelledby="editTribeModalLabel{{ $tribe->id }}" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editTribeModalLabel{{ $tribe->id }}">Edit Tribe</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="POST" action="{{ route('tribe.update', $tribe->id) }}">
+                </thead>
+                <tbody>
+                    @foreach ($tribes as $tribe)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $tribe->nama }}</td>
+                            <td>{{ $tribe->jenis_kelamin }}</td>
+                            <td>{{ $tribe->universitas }}</td>
+                            <td>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editTribeModal{{ $tribe->id }}">
+                                    Edit
+                                </button>
+                                <form action="{{ route('tribe.destroy', $tribe->id) }}" method="POST" style="display: inline;">
                                     @csrf
-                                    @method('PUT')
-                                    <div class="mb-3">
-                                        <label for="edit_nama" class="form-label">Nama</label>
-                                        <input type="text" class="form-control" id="edit_nama" name="nama" value="{{ $tribe->nama }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="edit_jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                        <input type="text" class="form-control" id="edit_jenis_kelamin" name="jenis_kelamin" value="{{ $tribe->jenis_kelamin }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="edit_universitas" class="form-label">Universitas</label>
-                                        <input type="text" class="form-control" id="edit_universitas" name="universitas" value="{{ $tribe->universitas }}">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
+                            </td>
+                        </tr>
+
+                        <!-- Modal Edit Tribe -->
+                        <div class="modal fade" id="editTribeModal{{ $tribe->id }}" tabindex="-1" aria-labelledby="editTribeModalLabel{{ $tribe->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editTribeModalLabel{{ $tribe->id }}">Edit Tribe</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="{{ route('tribe.update', $tribe->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="mb-3">
+                                                <label for="edit_nama" class="form-label">Nama</label>
+                                                <input type="text" class="form-control" id="edit_nama" name="nama" value="{{ $tribe->nama }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit_jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                                                <select class="form-control" id="edit_jenis_kelamin" name="jenis_kelamin">
+                                                    <option value="laki-laki" {{ $tribe->jenis_kelamin == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                                    <option value="perempuan" {{ $tribe->jenis_kelamin == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit_universitas" class="form-label">Universitas</label>
+                                                <input type="text" class="form-control" id="edit_universitas" name="universitas" value="{{ $tribe->universitas }}">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                @endforeach
-            </tbody>
-        </table>
-       </div>
-        
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Modal Add Tribe -->
@@ -105,7 +109,6 @@
                                 <option value="perempuan">Perempuan</option>
                             </select>
                         </div>
-                        
                         <div class="mb-3">
                             <label for="universitas" class="form-label">Universitas</label>
                             <input type="text" class="form-control" id="universitas" name="universitas">
@@ -116,7 +119,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Import Excel -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/importexcel" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="file" name="file" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-   
 @endsection

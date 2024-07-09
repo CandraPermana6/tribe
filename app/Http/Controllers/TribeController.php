@@ -81,4 +81,5 @@ class TribeController extends Controller
 
         return redirect()->route('tribe.index')->with('success', 'Tribe deleted successfully.');
     }
+
 }

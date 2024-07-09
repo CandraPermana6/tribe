@@ -14,19 +14,20 @@ class PenilaianController extends Controller
         $tribes = Tribe::all();
         $kriterias = Kriteria::all();
         $penilaians = Penilaian::all()->groupBy(['tribe_id', 'kriteria_id']);
+        $totalBobotSaatIni = Kriteria::all()->sum('bobot');
 
-        return view('penilaian', compact('tribes', 'kriterias', 'penilaians'));
+        return view('penilaian', compact('tribes', 'kriterias', 'penilaians','totalBobotSaatIni'));
     }
 
     public function store(Request $request)
 {
-    // Validate form data
+    // Validasi form data
     $request->validate([
         'tribe_id' => 'required|exists:tribes,id',
-        'nilai_*' => 'required' // Validate all nilai fields
+        'nilai_*' => 'required' // validasi semua nilai
     ]);
 
-    // Process nilai fields and update or create Penilaian records
+    // Proses penilaian dan perbarui
     foreach ($request->all() as $key => $value) {
         if (strpos($key, 'nilai_') !== false) {
             $kriteria_id = str_replace('nilai_', '', $key);

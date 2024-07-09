@@ -7,6 +7,7 @@ use App\Http\Controllers\PerhitunganController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\TribeController;
 use App\Http\Controllers\Auth\LoginController;
+// use App\Http\Controllers\TribesImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +42,4 @@ Route::get('/perhitungan/perangkingan/detail', [PerhitunganController::class, 'd
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

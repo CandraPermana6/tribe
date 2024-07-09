@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <h1 class="fw-bold text-center my-5">Riwayat Perhitungan</h1>
+    <h1 class="fw-bold text-center my-5">RIWAYAT</h1>
 
     <div class="card p-3 m-3 shadow">
-        <table class="table">
-            <thead>
+        <table class="table table-hover table-bordered">
+            <thead class="bg-primary text-white">
                 <tr>
                     <th scope="col">Perhitungan</th>
                     <th scope="col">Tanggal Perhitungan</th>

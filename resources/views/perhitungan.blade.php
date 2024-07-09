@@ -2,15 +2,16 @@
 
 @section('content')
 <div class="container">
-    <h1 class="fw-semibold text-center my-5">Daftar Perhitungan</h1>
+    <h1 class="fw-semibold text-center my-5">PERHITUNGAN</h1>
     <div class="card p-3 m-3 shadow">
+        <br>
         <div class="col-md-3">
 
-            <a href="{{ route('perhitungan.rangking') }}" class="btn btn-primary">Lihat Perangkingan</a>
+            <a href="{{ route('perhitungan.rangking') }}" class="btn btn-primary">Lihat Hasil</a>
         </div>
-        
-        <table class="table">
-            <thead>
+        <br>
+        <table class="table table-hover table-bordered">
+            <thead class="bg-primary text-white"> 
                 <tr>
                     <th scope="col">Nama Tribe</th>
                     <th scope="col">Kriteria</th>
