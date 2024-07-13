@@ -160,50 +160,94 @@ class PerhitunganController extends Controller
     }
 
     public function rangking()
-{
-    // Ambil semua tribes dan kriteria dari database
-    $tribes = Tribe::all();
-    $kriterias = Kriteria::all();
+    {
+        // Ambil semua tribes dan kriteria dari database
+        $tribes = Tribe::all();
+        $kriterias = Kriteria::all();
+    
+        // Inisialisasi array untuk menyimpan data perhitungan
+        $perhitunganSamaJam = [];
 
-    // Inisialisasi array untuk menyimpan data perhitungan
-    $perhitunganSamaJam = [];
-
-    // Looping setiap tribe
-    foreach ($tribes as $tribe) {
-        // Inisialisasi total nilai akhir
-        $totalNilaiAkhir = 0;
-
-        // Looping setiap kriteria
-        foreach ($kriterias as $kriteria) {
-            // Ambil penilaian berdasarkan tribe dan kriteria
-            $penilaian = Penilaian::where('tribe_id', $tribe->id)
-                ->where('kriteria_id', $kriteria->id)
-                ->first();
-
-            // Hitung nilai akhir per kriteria (jika penilaian ada)
-            if ($penilaian) {
-                $nilaiAwal = $penilaian->nilai;
-                $nilaiAkhir = $nilaiAwal * $kriteria->bobot;
-                $totalNilaiAkhir += $nilaiAkhir;
-            }
+        $kriteriaPengalaman = Kriteria::where('nama', 'Pengalaman')->first();
+        if ($kriteriaPengalaman) {
+            // Ambil semua sub kriteria dari kriteria 'Pengalaman'
+            $subKriterias = SubKriteria::where('kriteria_id', $kriteriaPengalaman->id)->get();
         }
-
-        // Simpan data perhitungan per tribe
-        $perhitunganSamaJam[] = [
-            'tribe' => $tribe,
-            'total_nilai_akhir' => $totalNilaiAkhir
-        ];
+    
+        // Looping setiap tribe
+        foreach ($tribes as $tribe) {
+            $nilaiAwalPerTribe = [];
+            $totalNilaiAkhir = 0;
+            $totalNilaiPengalaman = 0;
+            $nilaiAwalPengalaman = 0;
+    
+            foreach ($kriterias as $kriteria) {
+                if ($kriteria->nama === 'Pengalaman' && isset($subKriterias)) {
+                    $totalNilaiSubKriteria = 0;
+                    $jumlahSubKriteria = 0;
+                    
+                    foreach ($subKriterias as $subKriteria) {
+                        $penilaian = Penilaian::where('tribe_id', $tribe->id)
+                            ->where('sub_kriteria_id', $subKriteria->id)
+                            ->first();
+    
+                        $nilaiAwal = $penilaian ? $penilaian->nilai : 0;
+                        switch (strtolower($subKriteria->nama)) {
+                            case 'project':
+                                $nilaiAkhir = $nilaiAwal * 0.2;
+                                break;
+                            case 'pelatihan':
+                                $nilaiAkhir = $nilaiAwal * 0.1;
+                                break;
+                            case 'organisasi':
+                                $nilaiAkhir = $nilaiAwal * 0.05;
+                                break;
+                            default:
+                                $nilaiAkhir = 0;
+                                break;
+                        }
+                        $totalNilaiSubKriteria += $nilaiAwal; // Tambahkan nilai awal sub kriteria
+                        $totalNilaiPengalaman += $nilaiAkhir;
+                        $jumlahSubKriteria++;
+                    }
+                    
+                    $nilaiAwalPengalaman = $jumlahSubKriteria > 0 ? $totalNilaiSubKriteria / $jumlahSubKriteria : 0; // Rata-rata nilai awal sub kriteria
+                    
+                    
+                    $nilaiAwalPerTribe[$kriteria->id] = $nilaiAwalPengalaman; // Simpan nilai awal pengalaman
+                    $nilaiPerKriteria[$tribe->id][$kriteria->id] = $totalNilaiPengalaman;
+                    $totalNilaiAkhir += $totalNilaiPengalaman;
+                } else {
+                    $penilaian = Penilaian::where('tribe_id', $tribe->id)
+                        ->where('kriteria_id', $kriteria->id)
+                        ->first();
+    
+                    $nilaiAwal = $penilaian ? $penilaian->nilai : 'Belum dinilai';
+                    $nilaiAkhir = $nilaiAwal * $kriteria->bobot;
+                    $totalNilaiAkhir += $nilaiAkhir;
+    
+                    $nilaiAwalPerTribe[$kriteria->id] = $nilaiAwal;
+                    $nilaiPerKriteria[$tribe->id][$kriteria->id] = $nilaiAkhir;
+                }
+            }
+    
+            $nilaiPerKriteria[$tribe->id]['nilai_awal'] = $nilaiAwalPerTribe;
+    
+            $perhitunganSamaJam[] = [
+                'tribe' => $tribe,
+                'total_nilai_akhir' => $totalNilaiAkhir
+            ];
+        }
+    
+        // Urutkan data perhitungan berdasarkan total nilai akhir dari yang terbesar
+        usort($perhitunganSamaJam, function ($a, $b) {
+            return $b['total_nilai_akhir'] <=> $a['total_nilai_akhir'];
+        });
+    
+        // Tampilkan view dengan data perhitungan yang sudah diurutkan
+        return view('perangkingan', ['perhitunganSamaJam' => $perhitunganSamaJam]);
     }
-
-    // Urutkan data perhitungan berdasarkan total nilai akhir dari yang terbesar
-    usort($perhitunganSamaJam, function ($a, $b) {
-        return $b['total_nilai_akhir'] <=> $a['total_nilai_akhir'];
-    });
-
-    // Tampilkan view dengan data perhitungan yang sudah diurutkan
-    return view('perangkingan', ['perhitunganSamaJam' => $perhitunganSamaJam]);
-}
-
+    
 
     public function riwayatPdf($id){
         $perhitungan = Perhitungan::findOrFail($id);

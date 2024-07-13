@@ -38,7 +38,7 @@
     </style>
 </head>
 <body>
-    <h1>Nalai tertinggi 1 terpilih sebagai Tribe dan Nilai tertinggi 2 adalah Wakil Tribe </h1>
+    <h1>Nilai tertinggi 1 terpilih sebagai Tribe dan Nilai tertinggi 2 adalah Wakil Tribe </h1>
     <table class="table">
         <thead>
             <tr>
